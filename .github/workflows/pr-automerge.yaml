@@ -1,6 +1,5 @@
 name: Pull Request
-on:
-  status
+on: status
 
 permissions:
   contents: read
@@ -11,7 +10,7 @@ jobs:
     if: >-
       github.event.state == 'success'
     steps:
-      - env:
-          DESCRIPTION: ${{ github.event.description }}
-        run: |
-          echo The status is success: $DESCRIPTION
+    - env:
+        DESCRIPTION: ${{ github.event.description }}
+      run: |
+        echo "The status is success: $DESCRIPTION"
