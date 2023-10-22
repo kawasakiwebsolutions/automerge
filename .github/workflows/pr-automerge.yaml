@@ -17,4 +17,4 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Debug
       run: |
-        echo "Success checks"
+        echo "Success checks "
