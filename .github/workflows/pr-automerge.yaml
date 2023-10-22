@@ -1,5 +1,8 @@
 name: Pull Request Status Auto-merge
-on: status
+
+on:
+  check_run:
+    types: [completed]
 
 permissions:
   contents: read
@@ -7,12 +10,8 @@ permissions:
 jobs:
   trigger-on-check-success:
     runs-on: ubuntu-latest
-    # if: >-
-    #   github.event.state == 'success'
     steps:
-    - env:
-        STATE: ${{ github.event.state }}
-        DESCRIPTION: ${{ github.event.description }}
-      run: |
-        echo "Event state: $STATE"
-        echo "Event description: $DESCRIPTION"
+    - name: Check
+      uses: arup-group/action-all-checks-passed@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
