@@ -1,0 +1,18 @@
+name: Pull Request Status Auto-merge
+on: status
+
+permissions:
+  contents: read
+
+jobs:
+  trigger-on-check-success:
+    runs-on: ubuntu-latest
+    # if: >-
+    #   github.event.state == 'success'
+    steps:
+    - env:
+        STATE: ${{ github.event.state }}
+        DESCRIPTION: ${{ github.event.description }}
+      run: |
+        echo "Event state: $STATE"
+        echo "Event description: $DESCRIPTION"
