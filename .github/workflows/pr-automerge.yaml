@@ -10,7 +10,8 @@ jobs:
     # if: >-
     #   github.event.state == 'success'
     steps:
-    - env:
+    - name: Debug event
+      env:
         STATE: ${{ github.event.state }}
         DESCRIPTION: ${{ github.event.description }}
       run: |
