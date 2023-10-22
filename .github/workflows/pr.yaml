@@ -1,0 +1,38 @@
+name: Pull Request
+on:
+  pull_request:
+    branches:
+    - main
+    - develop
+    - uat
+
+    types:
+    - opened
+    - reopened
+    - edited
+    - synchronize
+permissions:
+  contents: read
+
+jobs:
+  pre-commit:
+    name: Run pre-commit
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v4.1.0
+      with:
+        fetch-depth: 0
+        
+    - name: Set up Python
+      uses: actions/setup-python@v4.7.0
+      with:
+        python-version: '3.10'
+
+    - name: Install pre-commit
+      run: |
+        pip install --upgrade pip wheel
+        pip install 'pre-commit ==3.3.3'
+
+    - name: Run pre-commit with diff results
+      run: pre-commit run --show-diff-on-failure --color=always --all-files

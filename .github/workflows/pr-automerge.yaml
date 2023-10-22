@@ -1,0 +1,17 @@
+name: Pull Request
+on:
+  status
+
+permissions:
+  contents: read
+
+jobs:
+  trigger-on-check-success:
+    runs-on: ubuntu-latest
+    if: >-
+      github.event.state == 'success'
+    steps:
+      - env:
+          DESCRIPTION: ${{ github.event.description }}
+        run: |
+          echo The status is success: $DESCRIPTION
