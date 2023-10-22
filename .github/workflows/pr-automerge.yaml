@@ -1,7 +1,7 @@
 name: Pull Request Status Auto-merge
 
 on:
-  check_run:
+  check_suite:
     types: [completed]
 
 permissions:
