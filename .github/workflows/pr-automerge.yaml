@@ -1,5 +1,7 @@
 name: Pull Request Status Auto-merge
-on: status
+on:
+  check_run:
+    types: [completed]
 
 jobs:
   trigger-on-check-success:
