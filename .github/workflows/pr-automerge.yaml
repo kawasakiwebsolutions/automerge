@@ -1,16 +1,30 @@
 name: Pull Request Status Auto-merge
 on:
-  check_run:
+  pull_request_review:
+    types: [submitted]
+
+permissions:
+  contents: write
+
+env:
+  USER_NAME: davikawasaki
+  USER_EMAIL: davishinjik@gmail.com
 
 jobs:
-  trigger-on-check-success:
+  trigger-on-approval:
+    if: github.event.review.state == 'APPROVED'
     runs-on: ubuntu-latest
-    # if: >-
-    #   github.event.state == 'success'
     steps:
-    - env:
-        STATE: ${{ github.event.state }}
-        DESCRIPTION: ${{ github.event.description }}
+    - name: Debug status
+      env:
+        STATE: ${{ github.event.review.state }}
       run: |
         echo "Event state: $STATE"
-        echo "Event description: $DESCRIPTION"
+        echo ${{ toJson(github) }}
+    - name: Auto-merge with --ff-only
+      env:
+        GH_TOKEN: ${{ secrets.CI_TOKEN }}
+      run: |
+        git config --global user.name "$USER_NAME"
+        git config --global user.email "$USER_EMAIL"
+        # git merge --ff-only origin/uat
