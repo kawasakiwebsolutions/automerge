@@ -36,4 +36,4 @@ jobs:
       run: |
         git config --global user.name "$USER_NAME"
         git config --global user.email "$USER_EMAIL"
-        # git merge --ff-only "origin/$BASE_REF"
+        git merge --ff-only "origin/$BASE_REF"
