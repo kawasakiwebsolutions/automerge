@@ -40,3 +40,4 @@ jobs:
         git fetch
         git checkout "$BASE_REF"
         git merge --ff-only "origin/$HEAD_REF"
+        git push
