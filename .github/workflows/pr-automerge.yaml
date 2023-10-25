@@ -15,6 +15,10 @@ jobs:
     if: github.event.review.state == 'APPROVED'
     runs-on: ubuntu-latest
     steps:
+    - name: Checkout
+      uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac # v4.0.0
+      # with:
+        # token: ${{ secrets.CI_TOKEN }}
     - name: Debug status
       env:
         STATE: ${{ github.event.review.state }}
@@ -27,7 +31,7 @@ jobs:
         echo "base: $BASE_REF"
     - name: Auto-merge with --ff-only
       env:
-        GH_TOKEN: ${{ secrets.CI_TOKEN }}
+        # GH_TOKEN: ${{ secrets.CI_TOKEN }}
         BASE_REF: ${{ github.event.pull_request.base.ref }}
       run: |
         git config --global user.name "$USER_NAME"
