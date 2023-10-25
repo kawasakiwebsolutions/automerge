@@ -33,7 +33,9 @@ jobs:
       env:
         # GH_TOKEN: ${{ secrets.CI_TOKEN }}
         BASE_REF: ${{ github.event.pull_request.base.ref }}
+        HEAD_REF: ${{ github.event.pull_request.head.ref }}
       run: |
         git config --global user.name "$USER_NAME"
         git config --global user.email "$USER_EMAIL"
-        git merge --ff-only "origin/$BASE_REF"
+        git checkout "origin/$BASE_REF"
+        git merge --ff-only "origin/$HEAD_REF"
