@@ -18,13 +18,18 @@ jobs:
     - name: Debug status
       env:
         STATE: ${{ github.event.review.state }}
+        HEAD_REF: ${{ github.event.pull_request.head.ref }}
+        BASE_REF: ${{ github.event.pull_request.base.ref }}
       run: |
         echo "Event state: $STATE"
-        echo ${{ toJson(github) }}
+        git branch
+        echo "head: $HEAD_REF"
+        echo "base: $BASE_REF"
     - name: Auto-merge with --ff-only
       env:
         GH_TOKEN: ${{ secrets.CI_TOKEN }}
+        BASE_REF: ${{ github.event.pull_request.base.ref }}
       run: |
         git config --global user.name "$USER_NAME"
         git config --global user.email "$USER_EMAIL"
-        # git merge --ff-only origin/uat
+        # git merge --ff-only "origin/$BASE_REF"
