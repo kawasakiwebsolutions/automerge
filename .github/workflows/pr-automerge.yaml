@@ -29,7 +29,8 @@ jobs:
         git branch
         echo "head: $HEAD_REF"
         echo "base: $BASE_REF"
-    - name: Auto-merge with --ff-only
+    - name: Auto-merge with --ff-only on UAT and main branches
+      if: github.event.pull_request.base.ref == 'main' || github.event.pull_request.base.ref == 'uat'
       env:
         # GH_TOKEN: ${{ secrets.CI_TOKEN }}
         BASE_REF: ${{ github.event.pull_request.base.ref }}
@@ -41,3 +42,23 @@ jobs:
         git checkout "$BASE_REF"
         git merge --ff-only "origin/$HEAD_REF"
         git push
+    - name: Auto-merge with --squash on develop branches
+      if: github.event.pull_request.base.ref == 'develop'
+      env:
+        # GH_TOKEN: ${{ secrets.CI_TOKEN }}
+        BASE_REF: ${{ github.event.pull_request.base.ref }}
+        HEAD_REF: ${{ github.event.pull_request.head.ref }}
+      run: |
+        git config --global user.name "$USER_NAME"
+        git config --global user.email "$USER_EMAIL"
+        git fetch
+        git checkout "$BASE_REF"
+        git merge --squash "origin/$HEAD_REF"
+        git push
+    - name: Remove feature branches that are merged to the develop branch
+      if: github.event.pull_request.head.ref != 'main' && github.event.pull_request.head.ref != 'uat'
+      env:
+        HEAD_REF: ${{ github.event.pull_request.head.ref }}
+      run: |
+        echo "Deleting branch $HEAD_REF..."
+        git push origin -d "$HEAD_REF"
