@@ -69,7 +69,7 @@ jobs:
         # git commit -m "$PR_TITLE (#$PR_NUMBER)" -m $"$list_commits_description"
         # git push -u origin "$BASE_REF"
 
-        url="https://api.github.com/repos/$ORG_REPO/pulls/$PR_NUMBER/merge"
+        url="https://api.github.com/repos/kawasakiwebsolutions/automerge/pulls/10/merge"
         echo "$url"
 
         curl -L \
@@ -78,10 +78,10 @@ jobs:
           -H "X-GitHub-Api-Version: 2022-11-28" \
           "$url" \
           -d '{ "commit_title": "'"$PR_TITLE"'", "commit_message": '"$list_commits_description"', "merge_method": "squash" }'
-    - name: Remove feature branch that are merged to the develop branch
-      if: github.event.pull_request.head.ref != 'main' && github.event.pull_request.head.ref != 'uat'
-      env:
-        HEAD_REF: ${{ github.event.pull_request.head.ref }}
-      run: |
-        echo "Deleting branch $HEAD_REF..."
-        git push origin -d "$HEAD_REF"
+    # - name: Remove feature branch that are merged to the develop branch
+    #   if: github.event.pull_request.head.ref != 'main' && github.event.pull_request.head.ref != 'uat'
+    #   env:
+    #     HEAD_REF: ${{ github.event.pull_request.head.ref }}
+    #   run: |
+    #     echo "Deleting branch $HEAD_REF..."
+    #     git push origin -d "$HEAD_REF"
