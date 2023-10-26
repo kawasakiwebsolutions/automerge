@@ -33,7 +33,7 @@ jobs:
     - name: Auto-merge with --ff-only on UAT and main branches
       if: github.event.pull_request.base.ref == 'main' || github.event.pull_request.base.ref == 'uat'
       env:
-        # GH_TOKEN: ${{ secrets.CI_TOKEN }}
+        GH_TOKEN: ${{ secrets.CI_TOKEN }}
         BASE_REF: ${{ github.event.pull_request.base.ref }}
         HEAD_REF: ${{ github.event.pull_request.head.ref }}
       run: |
@@ -46,7 +46,7 @@ jobs:
     - name: Auto-merge with --squash on develop branches
       if: github.event.pull_request.base.ref == 'develop'
       env:
-        # GH_TOKEN: ${{ secrets.CI_TOKEN }}
+        GH_TOKEN: ${{ secrets.CI_TOKEN }}
         BASE_REF: ${{ github.event.pull_request.base.ref }}
         HEAD_REF: ${{ github.event.pull_request.head.ref }}
         PR_TITLE: ${{ github.event.pull_request.title }}
