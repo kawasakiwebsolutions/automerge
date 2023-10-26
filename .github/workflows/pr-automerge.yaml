@@ -5,6 +5,7 @@ on:
 
 permissions:
   contents: write
+  pull-requests: write
 
 env:
   USER_NAME: davikawasaki
@@ -32,7 +33,7 @@ jobs:
     - name: Auto-merge with --ff-only on UAT and main branches
       if: github.event.pull_request.base.ref == 'main' || github.event.pull_request.base.ref == 'uat'
       env:
-        # GH_TOKEN: ${{ secrets.CI_TOKEN }}
+        GH_TOKEN: ${{ secrets.CI_TOKEN }}
         BASE_REF: ${{ github.event.pull_request.base.ref }}
         HEAD_REF: ${{ github.event.pull_request.head.ref }}
       run: |
@@ -45,7 +46,7 @@ jobs:
     - name: Auto-merge with --squash on develop branches
       if: github.event.pull_request.base.ref == 'develop'
       env:
-        # GH_TOKEN: ${{ secrets.CI_TOKEN }}
+        GH_TOKEN: ${{ secrets.CI_TOKEN }}
         BASE_REF: ${{ github.event.pull_request.base.ref }}
         HEAD_REF: ${{ github.event.pull_request.head.ref }}
         PR_TITLE: ${{ github.event.pull_request.title }}
@@ -58,19 +59,29 @@ jobs:
           "https://api.github.com/repos/$ORG_REPO/pulls/$PR_NUMBER/commits" \
           | jq -c '.')
 
-        list_commits_description=$(echo -E "$list_commits_gh" | jq -c 'map("* " + .commit.message) | join("\n\n")')
+        list_commits_description=$(echo -E "$list_commits_gh" | jq -c 'map("\r\n* " + .commit.message + "\r\n") | join("")')
 
         git config --global user.name "$USER_NAME"
         git config --global user.email "$USER_EMAIL"
-        git fetch
-        git checkout "$BASE_REF"
-        git merge --squash "origin/$HEAD_REF"
-        git commit -m "$PR_TITLE (#$PR_NUMBER)" -m $"$list_commits_description"
-        git push -u origin "$BASE_REF"
-    - name: Remove feature branch that are merged to the develop branch
-      if: github.event.pull_request.head.ref != 'main' && github.event.pull_request.head.ref != 'uat'
-      env:
-        HEAD_REF: ${{ github.event.pull_request.head.ref }}
-      run: |
-        echo "Deleting branch $HEAD_REF..."
-        git push origin -d "$HEAD_REF"
+        # git fetch
+        # git checkout "$BASE_REF"
+        # git merge --squash "origin/$HEAD_REF"
+        # git commit -m "$PR_TITLE (#$PR_NUMBER)" -m $"$list_commits_description"
+        # git push -u origin "$BASE_REF"
+
+        url="https://api.github.com/repos/kawasakiwebsolutions/automerge/pulls/10/merge"
+        echo "$url"
+
+        curl -L \
+          -X PUT \
+          -H "Accept: application/vnd.github+json" \
+          -H "X-GitHub-Api-Version: 2022-11-28" \
+          "$url" \
+          -d '{ "commit_title": "'"$PR_TITLE"'", "commit_message": '"$list_commits_description"', "merge_method": "squash" }'
+    # - name: Remove feature branch that are merged to the develop branch
+    #   if: github.event.pull_request.head.ref != 'main' && github.event.pull_request.head.ref != 'uat'
+    #   env:
+    #     HEAD_REF: ${{ github.event.pull_request.head.ref }}
+    #   run: |
+    #     echo "Deleting branch $HEAD_REF..."
+    #     git push origin -d "$HEAD_REF"
