@@ -72,7 +72,7 @@ jobs:
           "https://api.github.com/repos/$ORG_REPO/pulls/$PR_NUMBER/merge" \
           -d '{ "commit_title": "'"$PR_TITLE (#$PR_NUMBER)"'", "commit_message": '"$list_commits_description"', "merge_method": "squash" }'
     - name: Remove feature branch that are merged to the develop branch
-      if: github.event.pull_request.head.ref != 'main' && github.event.pull_request.head.ref != 'uat'
+      if: github.event.pull_request.head.ref != 'main' && github.event.pull_request.head.ref != 'uat' && github.event.pull_request.head.ref != 'develop'
       env:
         HEAD_REF: ${{ github.event.pull_request.head.ref }}
       run: |
