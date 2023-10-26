@@ -52,7 +52,7 @@ jobs:
         PR_NUMBER: ${{ github.event.pull_request.number }}
         ORG_REPO: ${{ github.repository }}
       run: |
-        echo "ORG_REPO"
+        echo "$ORG_REPO"
         # list_commits_gh=$(curl -L \
         #   -H "Accept: application/vnd.github+json" \
         #   -H "X-GitHub-Api-Version: 2022-11-28" \
