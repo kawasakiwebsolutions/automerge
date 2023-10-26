@@ -50,9 +50,9 @@ jobs:
         HEAD_REF: ${{ github.event.pull_request.head.ref }}
         PR_TITLE: ${{ github.event.pull_request.title }}
         PR_NUMBER: ${{ github.event.pull_request.number }}
-        # ORG_REPO: ${{ github.event.repository }}
+        ORG_REPO: ${{ github.repository }}
       run: |
-        echo "${{ github.event.repository }}"
+        echo "ORG_REPO"
         # list_commits_gh=$(curl -L \
         #   -H "Accept: application/vnd.github+json" \
         #   -H "X-GitHub-Api-Version: 2022-11-28" \
