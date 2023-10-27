@@ -60,13 +60,16 @@ jobs:
         PR_NUMBER: ${{ inputs.pull_request_number }}
         ORG_REPO: ${{ inputs.pull_request_full_organization_repo_name }}
       run: |
-        pr_details=$(gh pr view "https://github.com/$ORG_REPO/pull/$PR_NUMBER" --json mergeStateStatus)
+        pr_details=$(gh pr view "https://github.com/$ORG_REPO/pull/$PR_NUMBER" --json mergeStateStatus,reviewDecision)
 
         merge_state_status=$(echo -E "$pr_details" | jq -c '.mergeStateStatus')
         echo "$merge_state_status"
 
+        review_decision=$(echo -E "$pr_details" | jq -c '.reviewDecision')
+        echo "$review_decision"
+
         if [[ "$merge_state_status" == "\"BLOCKED\"" ]]; then
-          echo "Pull request is not ready to be merged due to checks or quantity of reviewers. Please fix them."
+          echo "Pull request is not ready to be merged due to checks or quantity of reviewers. Review decision: $review_decision."
           exit 1
         fi
 
