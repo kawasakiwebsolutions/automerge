@@ -65,7 +65,7 @@ jobs:
         merge_state_status=$(echo -E "$pr_details" | jq -c '.mergeStateStatus')
         echo "$merge_state_status"
 
-        if [[ "$merge_state_status" == "BLOCKED" ]]; then
+        if [[ "$merge_state_status" == "\"BLOCKED\"" ]]; then
           echo "Pull request is not ready to be merged due to checks or quantity of reviewers. Please fix them."
           exit 1
         fi
