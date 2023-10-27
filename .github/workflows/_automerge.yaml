@@ -89,7 +89,7 @@ jobs:
         git config --global user.name "$USER_NAME"
         git config --global user.email "$USER_EMAIL"
 
-        gh pr merge --squash --delete-branch
+        gh pr merge --squash --delete-branch "https://github.com/$ORG_REPO/pull/$PR_NUMBER"
 
         # curl -L \
         #   -X PUT \
