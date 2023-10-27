@@ -54,6 +54,22 @@ jobs:
         echo "head: $HEAD_REF"
         echo "base: $BASE_REF"
 
+    - name: Check if pull request has been reviewed by all actors
+      env:
+        GH_TOKEN: ${{ secrets.CI_TOKEN }}
+        PR_NUMBER: ${{ inputs.pull_request_number }}
+        ORG_REPO: ${{ inputs.pull_request_full_organization_repo_name }}
+      run: |
+        pr_details=$(gh pr view "https://github.com/$ORG_REPO/pull/$PR_NUMBER" --json mergeStateStatus)
+
+        merge_state_status=$(echo -E "$pr_details" | jq -c '.mergeStateStatus')
+        echo "$merge_state_status"
+
+        if [[ "$merge_state_status" == "BLOCKED" ]]; then
+          echo "Pull request is not ready to be merged due to checks or quantity of reviewers. Please fix them."
+          exit 1
+        fi
+
     - name: Auto-merge with --ff-only on UAT and main branches
       if: inputs.pull_request_base_branch == 'main' || inputs.pull_request_base_branch == 'uat'
       env:
