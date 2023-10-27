@@ -68,7 +68,7 @@ jobs:
         review_decision=$(echo -E "$pr_details" | jq -c '.reviewDecision')
         echo "$review_decision"
 
-        if [[ "$merge_state_status" == "\"BLOCKED\"" ]]; then
+        if [[ "$merge_state_status" == "\"BLOCKED\"" && "$review_decision" != "\"APPROVED\"" ]]; then
           echo "Pull request is not ready to be merged due to checks or quantity of reviewers. Review decision: $review_decision."
           exit 1
         fi
