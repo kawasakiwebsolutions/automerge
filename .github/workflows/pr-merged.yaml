@@ -1,0 +1,29 @@
+name: Debug PR merged event
+on:
+  pull_request_target:
+    types:
+    - closed
+    branches:
+    - main
+    - develop
+    - uat
+
+permissions:
+  contents: read
+
+env:
+  USER_NAME: davikawasaki
+  USER_EMAIL: davishinjik@gmail.com
+
+jobs:
+  debug-pr-merged:
+    if: ${{ github.event.pull_request.merged }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+    - name: Debug pull request
+      env:
+        pull_request: ${{ toJson(github.event.pull_request) }}
+      run: |
+        echo "$pull_request"
